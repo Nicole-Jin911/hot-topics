@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>热点验证 - AI 助手</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f6f7;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* 顶部导航栏 */
+    .navbar {
+      background: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+    .navbar h1 {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .navbar .links {
+      display: flex;
+      gap: 16px;
+    }
+    .navbar .links a {
+      color: #3370ff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .navbar .links a:hover { text-decoration: underline; }
+    /* SDK 容器 */
+    .sdk-container {
+      flex: 1;
+      padding: 0;
+      overflow: hidden;
+    }
+    #aily-chat {
+      width: 100%;
+      height: 100%;
+    }
+    /* 底部 */
+    .footer {
+      text-align: center;
+      padding: 8px;
+      color: #bbbec3;
+      font-size: 11px;
+      background: white;
+      border-top: 1px solid #e5e6e8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>🔥 热点验证 · AI 助手</h1>
+    <div class="links">
+      <a href="./index.html">📊 热榜大屏</a>
+      <a href="https://aily.feishu.cn" target="_blank">Powered by Aily</a>
+    </div>
+  </div>
+
+  <div class="sdk-container">
+    <div id="aily-chat"></div>
+  </div>
+
+  <div class="footer">🦞 热点验证工具 · 飞书 Aily Web SDK</div>
+
+  <!-- ============================== -->
+  <!-- Aily Web SDK (Iframe 模式)      -->
+  <!-- ============================== -->
+  <script>
+    // ============================================================
+    // 配置区 - 修改下方 APP_KEY 为你的妙搭 Skill AppKey
+    // 获取方式: 飞书 Aily 后台 → 应用 → 渠道管理 → SDK → 复制 AppKey
+    // ============================================================
+    const APP_KEY = '你的妙搭SkillAppKey';  // ← 替换这里
+
+    // ============================================================
+    // 匿名模式配置
+    // 前提: 在 Aily 后台开启「支持使用应用身份调用 API 和 SDK」
+    // ============================================================
+    const params = {
+      common: {
+        channelType: 'ANONYMOUS_CUI_SDK',   // 匿名渠道类型（必须）
+        resourceType: 'AILY_CUI_SDK',
+      },
+      conversation: {
+        needAvatar: true,
+        needWelcomeMessage: true,
+        needCache: false,
+      },
+      editor: {
+        display: true,
+        needHeader: true,
+        headerTitle: '热点验证助手',
+      }
+    };
+
+    // 编码 config 参数
+    const stringParams = JSON.stringify(params);
+    const configValue = encodeURIComponent(btoa(stringParams));
+
+    // 构造 iframe URL
+    const iframeHost = 'https://ae.feishu.cn';
+    const iframeUrl = `${iframeHost}/cui#appkey=${APP_KEY}&config=${configValue}`;
+
+    // 创建 iframe 并插入到容器
+    const container = document.getElementById('aily-chat');
+    const iframe = document.createElement('iframe');
+    iframe.src = iframeUrl;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.allow = 'clipboard-write';
+    container.appendChild(iframe);
+  </script>
+
+</body>
+</html>
